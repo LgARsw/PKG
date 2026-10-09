@@ -20,7 +20,6 @@ class ImageAnalyzerApp(QMainWindow):
         self.setCentralWidget(central_widget)
         main_layout = QVBoxLayout(central_widget)
 
-        # --- Верхняя панель ---
         top_layout = QHBoxLayout()
         self.btn_select = QPushButton("Выбрать папку")
         self.btn_select.clicked.connect(self.select_folder)
@@ -41,44 +40,36 @@ class ImageAnalyzerApp(QMainWindow):
         top_layout.addWidget(self.btn_stop)
         main_layout.addLayout(top_layout)
 
-        # --- Прогресс-бар ---
         self.progress_bar = QProgressBar()
         self.progress_bar.setValue(0)
         main_layout.addWidget(self.progress_bar)
 
-        # --- Таблица ---
         self.table = QTableWidget()
         self.table.setColumnCount(6)
         self.table.setHorizontalHeaderLabels([
             "Имя файла", "Формат", "Размер (px)", "Разрешение (DPI)", "Глубина цвета", "Сжатие"
         ])
         
-        # --- СТАТИЧЕСКАЯ НАСТРОЙКА ШИРИНЫ КОЛОНОК ---
         header = self.table.horizontalHeader()
         
-        # 1. "Имя файла" — растягивается на свободное место (но не бесконечно)
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         
-        # 2. Остальные колонки — фиксированная ширина
         fixed_widths = {
-            1: 90,   # Формат (JPEG, PNG, BMP)
-            2: 120,  # Размер (например, 1920x1080)
-            3: 150,  # DPI (например, 72x72 (default))
-            4: 210,  # Глубина цвета (32 bit (True Color + Alpha))
-            5: 170,  # Сжатие (Lossless / None)
+            1: 90,   
+            2: 120,  
+            3: 150,  
+            4: 210, 
+            5: 170, 
         }
         
         for col, width in fixed_widths.items():
             header.setSectionResizeMode(col, QHeaderView.ResizeMode.Fixed)
             self.table.setColumnWidth(col, width)
         
-        # 3. Задаем минимальную ширину для "Имя файла", чтобы не сжималась слишком сильно
         self.table.setColumnWidth(0, 350)
         
-        # 4. Отключаем растягивание последней колонки
         header.setStretchLastSection(False)
         
-        # 5. Запрет редактирования и чередование цветов
         self.table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self.table.setAlternatingRowColors(True)
         
